@@ -1,0 +1,40 @@
+
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    environment: 
+      PGPASSWORD: esgi
+      PGUSER: "esgi"
+      PGDATABASE: esgi
+      PGHOST: database
+      PGPORT: 5432
+    ports:
+      - "6000:3000"
+    depends_on:
+      - "database"
+  database:
+    image: "postgres:latest"
+    container_name: "app-database"
+    environment:
+      POSTGRES_PASSWORD: esgi
+      POSTGRES_USER: esgi
+    ports:
+        - "127.0.0.1:6100:5432"
+    volumes:
+      - "./database-init.sql:/docker-entrypoint-initdb.d/init-database.sql"
+      - "db-data:/var/lib/postgresql/data"
+  database-administration:
+    image: "adminer:latest"
+    container_name: "app-database-administration"
+    image: "adminer"
+    ports:
+      - "6200:8080"
+  mailhog:
+    image: "mailhog/mailhog:latest"
+    container_name: "app-mail-server"
+    ports:
+      - "6300:1025"
+      - "6400:8025"
+volumes:
+  db-data: {}
