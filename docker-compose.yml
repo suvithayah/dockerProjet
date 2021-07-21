@@ -1,6 +1,14 @@
 
 version: "3.8"
 services:
+  frontend:
+    build: ./frontend
+    environment:
+      REACT_APP_API_HOST: 'http://localhost:4000'
+    ports:
+      - "4500:80"
+    volumes:
+      - "./front-nginx.conf:/etc/nginx/templates/default.conf.template"
   backend:
     build: ./backend
     environment:
@@ -10,7 +18,7 @@ services:
       PGHOST: database
       PGPORT: 5432
     ports:
-      - "6000:3000"
+      - "4000:3000"
     depends_on:
       - "database"
   database:
@@ -20,7 +28,7 @@ services:
       POSTGRES_PASSWORD: esgi
       POSTGRES_USER: esgi
     ports:
-        - "127.0.0.1:6100:5432"
+        - "4100:6100:5432"
     volumes:
       - "./database-init.sql:/docker-entrypoint-initdb.d/init-database.sql"
       - "db-data:/var/lib/postgresql/data"
@@ -34,8 +42,8 @@ services:
     image: "mailhog/mailhog:latest"
     container_name: "app-mail-server"
     ports:
-      - "6300:1025"
-      - "6400:8025"
+      - "4300:1025"
+      - "4400:8025"
 
   elasticsearch:
     build:

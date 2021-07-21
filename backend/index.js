@@ -1,8 +1,10 @@
 const express = require('express')
 const app = express()
 const { Client } = require('pg')
+const cors = require('cors')
 const client = new Client()
 
+app.use(cors())
 
 app.get('/', (req, res) => {
   res.redirect("/messages")
